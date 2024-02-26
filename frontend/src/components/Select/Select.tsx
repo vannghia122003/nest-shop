@@ -30,6 +30,7 @@ function Select<Option>({
               '!border-red-600 !bg-red-50': errorMessage
             }),
           input: () => '!m-0 !p-0',
+          menu: () => '!z-10',
           valueContainer: () => '!py-3 !pl-4',
           singleValue: () => '!m-0',
           menuList: () => `!max-h-[${menuHeight}px]`,
