@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: E-commerce Api Document - OpenAPI 3.0
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4000/api
+tags:
+  - name: auth
+  - name: users
+  - name: products
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: email@gmail.com
+                password:
+                  type: string
+                  example: password
+        required: true
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đăng nhập thành công
+                  result:
+                    $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Email hoặc mật khẩu không đúng
+        '422':
+          description: Lỗi validation
+  /users/me:
+    get:
+      tags:
+        - users
+      operationId: getMe
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy thông tin người dùng thành công
+                  result:
+                    $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: email@gmail.com
+        password:
+          type: string
+          example: password
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjU0NWRiN2ZhY2JlMjhkMGFlYTVhMTZmIiwidG9rZW5fdHlwZSI6MCwicm9sZSI6eyJfaWQiOiI2NTQ2MjM2NzNhMzUzZTYwZjc0YTYyNTQiLCJuYW1lIjoiQWRtaW4ifSwiaWF0IjoxNzAwNjU5NzQ3LCJleHAiOjE3MDA2NjA2NDd9.KGfuIoIS2mWdyu7zoTpjMBqjy6GgJ113T2gKM1X9D2c
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjU0NWRiN2ZhY2JlMjhkMGFlYTVhMTZmIiwidG9rZW5fdHlwZSI6MSwicm9sZSI6eyJfaWQiOiI2NTQ2MjM2NzNhMzUzZTYwZjc0YTYyNTQiLCJuYW1lIjoiQWRtaW4ifSwiaWF0IjoxNzAwNjU5NzQ3LCJleHAiOjE3MDA3NDYxNDd9.uCy0CeMobUucaIXOlM7Xuis7GoYxiHjP7nc7jVQ5poQ
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        date_of_birth:
+          type: string
+          format: date-time
+        address:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        is_email_verified:
+          type: boolean
+        avatar:
+          type: string
+          format: uri
+        phone:
+          type: string
+          format: phone

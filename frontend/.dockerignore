@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.prettierrc
+.prettierignore
+.eslintrc
+.eslintignore
+.editorconfig
+README.md
+.dockerignore
