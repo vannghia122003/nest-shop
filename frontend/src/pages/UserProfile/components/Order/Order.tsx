@@ -4,6 +4,7 @@ import { TbMoneybag } from 'react-icons/tb'
 import { Link, createSearchParams } from 'react-router-dom'
 import orderApi from '~/apis/order.api'
 import Images from '~/constants/images'
+import QUERY_KEYS from '~/constants/keys'
 import { orderStatus } from '~/constants/order'
 import path from '~/constants/path'
 import { useQueryParams } from '~/hooks'
@@ -22,7 +23,7 @@ function Order() {
   const queryParams: { status?: string } = useQueryParams()
   const status = isNaN(Number(queryParams.status)) ? orderStatus.all : Number(queryParams.status)
   const { data: ordersData } = useQuery({
-    queryKey: ['purchases', status],
+    queryKey: [QUERY_KEYS.PURCHASES, status],
     queryFn: () => orderApi.getUserOrders({ status: status as OrderStatus })
   })
   const orders = ordersData?.result

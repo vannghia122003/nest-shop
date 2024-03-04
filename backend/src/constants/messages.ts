@@ -108,7 +108,9 @@ export const PRODUCT_MESSAGES = {
   VALUE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_0: 'Giá trị phải lớn hơn hoặc bằng 0',
 
   RATING_MUST_BE_A_NUMBER_FROM_1_TO_5: 'rating phải là số trong khoảng từ 1 đến 5',
-  RATING_IS_INVALID: 'rating không hợp lệ'
+  RATING_IS_INVALID: 'rating không hợp lệ',
+
+  ATTRIBUTES_MUST_BE_ARRAY: 'Attributes phải là mảng'
 }
 
 export const CART_MESSAGES = {

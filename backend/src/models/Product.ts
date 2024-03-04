@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { Attributes } from '~/types/product'
 
 interface Type {
   _id?: ObjectId
@@ -12,6 +13,7 @@ interface Type {
   review?: number
   image: string
   images?: string[]
+  attributes?: Attributes[]
   category_id?: string
   created_at?: Date
   updated_at?: Date
@@ -29,6 +31,7 @@ export default class Product {
   review: number
   image: string
   images: string[]
+  attributes: Attributes[]
   category_id: ObjectId | null
   created_at: Date
   updated_at: Date
@@ -44,6 +47,7 @@ export default class Product {
     this.review = Number(product.review) || 0
     this.image = product.image
     this.images = product.images ? product.images : []
+    this.attributes = product.attributes ? product.attributes : []
     this.category_id = product.category_id ? new ObjectId(product.category_id) : null
     this.created_at = product.created_at || new Date()
     this.updated_at = product.updated_at || new Date()

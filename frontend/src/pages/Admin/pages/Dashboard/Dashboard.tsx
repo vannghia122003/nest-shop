@@ -3,10 +3,11 @@ import { FaRegEye, FaRegMoneyBillAlt, FaRegUser } from 'react-icons/fa'
 import { HiOutlineSquare3Stack3D } from 'react-icons/hi2'
 import dashboardApi from '~/apis/dashboard.api'
 import Card from '../../components/Card'
+import QUERY_KEYS from '~/constants/keys'
 
 function Dashboard() {
   const { data } = useQuery({
-    queryKey: ['dashboard'],
+    queryKey: [QUERY_KEYS.DASHBOARD],
     queryFn: dashboardApi.getStatistics
   })
 

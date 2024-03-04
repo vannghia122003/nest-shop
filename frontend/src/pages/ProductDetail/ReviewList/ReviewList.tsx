@@ -5,6 +5,7 @@ import productApi from '~/apis/product.api'
 import ConfirmModal from '~/components/ConfirmModal'
 import Pagination from '~/components/Pagination'
 import ProductRating from '~/components/ProductRating'
+import QUERY_KEYS from '~/constants/keys'
 import { ReviewListQuery } from '~/types/review.type'
 import { convertISOString } from '~/utils/helpers'
 import { socket } from '~/utils/socket'
@@ -22,7 +23,7 @@ function ReviewList({ product_id, setEditingReviewId, isTypingReview }: Props) {
   const queryClient = useQueryClient()
   const [pagination, setPagination] = useState<ReviewListQuery>({ limit: 5, page: 1 })
   const { data: reviewsData } = useQuery({
-    queryKey: ['reviews', pagination],
+    queryKey: [QUERY_KEYS.REVIEWS, pagination],
     queryFn: () => productApi.getReviews({ product_id, params: pagination }),
     placeholderData: keepPreviousData
   })
@@ -93,7 +94,7 @@ function ReviewList({ product_id, setEditingReviewId, isTypingReview }: Props) {
       {
         onSuccess: () => {
           setOpenModal(false)
-          queryClient.invalidateQueries({ queryKey: ['reviews'] })
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
           localStorage.removeItem('review_id')
           socket.emit('delete_review')
         }

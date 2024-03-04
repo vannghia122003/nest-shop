@@ -11,6 +11,7 @@ import {
   TableRow
 } from 'flowbite-react'
 import orderApi from '~/apis/order.api'
+import QUERY_KEYS from '~/constants/keys'
 import { customTheme } from '~/types/custom.type'
 import { OrderStatus } from '~/types/order.type'
 import { convertISOString, formatCurrency } from '~/utils/helpers'
@@ -23,7 +24,7 @@ interface Props {
 
 function OrderModal({ openModal, onCloseModal, orderId }: Props) {
   const { data } = useQuery({
-    queryKey: ['order', orderId],
+    queryKey: [QUERY_KEYS.ORDER_DETAIL, orderId],
     queryFn: () => orderApi.getOrderDetail(orderId),
     enabled: Boolean(orderId)
   })

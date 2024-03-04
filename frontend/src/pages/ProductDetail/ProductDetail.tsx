@@ -16,6 +16,7 @@ import { isUnauthorizedError } from '~/utils/errors'
 import { formatCurrency, formatNumberToCompactStyle, getIdFromNameId } from '~/utils/helpers'
 import { ProductImage, ReviewInput, ReviewList } from '.'
 import { socket } from '~/utils/socket'
+import QUERY_KEYS from '~/constants/keys'
 
 function ProductDetail() {
   const queryClient = useQueryClient()
@@ -23,7 +24,7 @@ function ProductDetail() {
   const product_id = getIdFromNameId(nameId as string)
   const [buyCount, setBuyCount] = useState(1)
   const { data: productDetailData } = useQuery({
-    queryKey: ['product', product_id],
+    queryKey: [QUERY_KEYS.PRODUCT_DETAIL, product_id],
     queryFn: () => productApi.getProductDetail(product_id)
   })
   const product = productDetailData?.result
@@ -33,8 +34,8 @@ function ProductDetail() {
 
   const handleInvalidateQueries = useCallback(() => {
     Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['product'] }),
-      queryClient.invalidateQueries({ queryKey: ['reviews'] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCT_DETAIL] }),
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
     ])
   }, [queryClient])
 
@@ -67,9 +68,7 @@ function ProductDetail() {
       },
       {
         onSuccess: (data) => {
-          queryClient.invalidateQueries({
-            queryKey: ['cart']
-          })
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CART] })
           toast.success(data.message)
         },
         onError: (error) => {

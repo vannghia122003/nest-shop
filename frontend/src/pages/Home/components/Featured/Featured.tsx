@@ -11,7 +11,7 @@ const items = [
   },
   {
     image: Images.DEAL,
-    content: 'Ưu đãi hàng ngày tuyệt vời'
+    content: 'Ưu đãi hàng ngày'
   },
   {
     image: Images.WIDE_ASSORTMENT,

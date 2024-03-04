@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Button as ButtonFlowBite,
   Flowbite,
@@ -21,10 +21,11 @@ import userApi from '~/apis/user.api'
 import Button from '~/components/Button'
 import ConfirmModal from '~/components/ConfirmModal'
 import Input from '~/components/Input'
+import QUERY_KEYS from '~/constants/keys'
 import { customTheme } from '~/types/custom.type'
-import InputFile from '../../components/InputFile'
-import { isUnprocessableEntity } from '~/utils/errors'
 import { ErrorResponse } from '~/types/response.type'
+import { isUnprocessableEntity } from '~/utils/errors'
+import InputFile from '../../components/InputFile'
 
 const categorySchema = yup.object({
   name: yup.string().required('Nhập tên danh mục'),
@@ -33,6 +34,7 @@ const categorySchema = yup.object({
 type FormData = yup.InferType<typeof categorySchema>
 
 function CategoryAdmin() {
+  const queryClient = useQueryClient()
   const [openModalConfirm, setOpenModalConfirm] = useState<boolean>(false)
   const [deletingCategoryId, setDeletingCategoryId] = useState('')
   const [updatingCategoryId, setUpdatingCategoryId] = useState('')
@@ -47,13 +49,13 @@ function CategoryAdmin() {
     limit: 5
   })
   const { data: categoryListData, refetch } = useQuery({
-    queryKey: ['categories', categoryListQuery],
+    queryKey: [QUERY_KEYS.CATEGORIES, categoryListQuery],
     queryFn: () => categoryApi.getCategories(categoryListQuery),
     staleTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData
   })
   const { data: categoryData } = useQuery({
-    queryKey: ['category'],
+    queryKey: [QUERY_KEYS.CATEGORY_DETAIL],
     queryFn: () => categoryApi.getCategory(updatingCategoryId),
     enabled: Boolean(updatingCategoryId)
   })
@@ -91,7 +93,7 @@ function CategoryAdmin() {
         onSuccess: () => {
           setOpenModalConfirm(false)
           setDeletingCategoryId('')
-          refetch()
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CATEGORIES] })
         }
       })
     }

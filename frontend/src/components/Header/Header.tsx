@@ -19,6 +19,7 @@ import Notification from './Notification'
 import notificationApi from '~/apis/notification.api'
 import { socket } from '~/utils/socket'
 import config from '~/constants/config'
+import QUERY_KEYS from '~/constants/keys'
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
@@ -27,24 +28,29 @@ function Header() {
   // khi chuyển trang thì header chỉ re-render chứ k bị unmount và mounting lại (trừ trường hợp logout rồi nhảy vào RegisterLayout rồi nhảy vào lại)
   // nên các query này sẽ ko bị inactive (inactive khi k có component nào subscribe) => ko bị gọi lại => ko cần set staleTime = Infinity
   const { data: cartData } = useQuery({
-    queryKey: ['cart'],
+    queryKey: [QUERY_KEYS.CART],
     queryFn: cartApi.getCart,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000
   })
   const { data: notificationData, refetch } = useQuery({
-    queryKey: ['notifications'],
+    queryKey: [QUERY_KEYS.NOTIFICATIONS],
     queryFn: notificationApi.getNotifications,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000
   })
 
   useEffect(() => {
+    const handleReceiveNotification = () => {
+      refetch()
+      toast.info('Bạn có thông báo mới')
+    }
+
     if (isAuthenticated) {
-      socket.on('receive_notifications', refetch)
+      socket.on('receive_notifications', handleReceiveNotification)
     }
     return () => {
-      socket.off('receive_notifications', refetch)
+      socket.off('receive_notifications', handleReceiveNotification)
     }
   }, [isAuthenticated, refetch])
 

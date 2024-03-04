@@ -8,6 +8,7 @@ import cartApi from '~/apis/cart.api'
 import Button from '~/components/Button'
 import QuantityController from '~/components/QuantityController'
 import Images from '~/constants/images'
+import QUERY_KEYS from '~/constants/keys'
 import path from '~/constants/path'
 import { ProductLineItem } from '~/types/product.type'
 import { formatCurrency, generateNameId } from '~/utils/helpers'
@@ -20,7 +21,7 @@ export interface CartItem extends ProductLineItem {
 function Cart() {
   const [cart, setCart] = useState<CartItem[]>([])
   const { data: productsInCartData, refetch } = useQuery({
-    queryKey: ['cart'],
+    queryKey: [QUERY_KEYS.CART],
     queryFn: cartApi.getCart,
     staleTime: 5 * 60 * 1000
   })

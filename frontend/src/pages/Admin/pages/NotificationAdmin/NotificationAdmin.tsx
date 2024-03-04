@@ -28,6 +28,7 @@ import { isUnprocessableEntity } from '~/utils/errors'
 import { convertISOString } from '~/utils/helpers'
 import { socket } from '~/utils/socket'
 import InputFile from '../../components/InputFile'
+import QUERY_KEYS from '~/constants/keys'
 
 const notificationSchema = yup.object({
   title: yup.string().required('Nhập tiêu đề thông báo'),
@@ -67,7 +68,7 @@ function NotificationAdmin() {
   const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss])
 
   const { data: notificationData, refetch } = useQuery({
-    queryKey: ['notifications'],
+    queryKey: [QUERY_KEYS.NOTIFICATIONS],
     queryFn: notificationApi.getNotifications,
     staleTime: 5 * 60 * 1000
   })

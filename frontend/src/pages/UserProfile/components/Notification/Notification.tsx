@@ -2,19 +2,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import notificationApi from '~/apis/notification.api'
 import Images from '~/constants/images'
+import QUERY_KEYS from '~/constants/keys'
 import { convertISOString } from '~/utils/helpers'
 
 function Notification() {
   const queryClient = useQueryClient()
   const { data: notificationData } = useQuery({
-    queryKey: ['notifications'],
+    queryKey: [QUERY_KEYS.NOTIFICATIONS],
     queryFn: notificationApi.getNotifications,
     staleTime: 5 * 60 * 1000
   })
   const markAllReadMutation = useMutation({
     mutationFn: notificationApi.markAllRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] })
     }
   })
   const isReadAll = notificationData?.result.every((notification) => notification.read)

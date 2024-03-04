@@ -6,6 +6,11 @@ export interface ProductLineItem {
   buy_count: number
 }
 
+export interface Attributes {
+  key: string
+  value: string
+}
+
 export interface CreateProductReqBody {
   name: string
   description: string
@@ -18,6 +23,7 @@ export interface CreateProductReqBody {
   sold?: number
   review?: number
   rating?: number
+  attributes?: Attributes[]
 }
 
 export interface UpdateProductReqBody {
@@ -32,6 +38,7 @@ export interface UpdateProductReqBody {
   review?: number
   rating?: number
   category_id?: string
+  attributes?: Attributes[]
 }
 
 export interface UpdateProductType extends Omit<UpdateProductReqBody, 'category_id'> {

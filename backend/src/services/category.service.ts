@@ -39,26 +39,23 @@ const categoryService = {
   },
 
   async deleteCategoryById(category_id: string) {
-    const result = await db.categories.findOneAndDelete({ _id: new ObjectId(category_id) })
+    const categoryObjectId = new ObjectId(category_id)
+    const [category] = await Promise.all([
+      db.categories.findOneAndDelete({ _id: categoryObjectId }),
+      db.products.updateMany({ category_id: categoryObjectId }, { $set: { category_id: null } })
+    ])
 
-    return result
+    return category
   },
 
   async updateCategoryById(category_id: string, body: UpdateCategoryRequestBody) {
     const result = await db.categories.findOneAndUpdate(
       { _id: new ObjectId(category_id) },
       {
-        $set: {
-          name: body.name,
-          image: body.image
-        },
-        $currentDate: {
-          updated_at: true
-        }
+        $set: { name: body.name, image: body.image },
+        $currentDate: { updated_at: true }
       },
-      {
-        returnDocument: 'after'
-      }
+      { returnDocument: 'after' }
     )
 
     return result

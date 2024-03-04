@@ -1,35 +1,36 @@
 import { useQuery } from '@tanstack/react-query'
+import { Helmet } from 'react-helmet-async'
+import { createSearchParams } from 'react-router-dom'
 import categoryApi from '~/apis/category.api'
 import productApi from '~/apis/product.api'
+import QUERY_KEYS from '~/constants/keys'
+import { sortBy } from '~/constants/product'
 import Banner from './components/Banner'
 import CategoryList from './components/CategoryList'
 import Featured from './components/Featured'
-import ProductList from './components/ProductList'
 import Newsletter from './components/Newsletter'
-import { createSearchParams } from 'react-router-dom'
-import { sortBy } from '~/constants/product'
-import { Helmet } from 'react-helmet-async'
+import ProductList from './components/ProductList'
 
 function Home() {
   const { data: categoriesData, isPending: isPendingCategories } = useQuery({
-    queryKey: ['categories'],
+    queryKey: [QUERY_KEYS.CATEGORIES],
     queryFn: () => categoryApi.getCategories(),
     staleTime: 5 * 60 * 1000
   })
   const { data: latestProductsData, isPending: isPendingLatestProductsData } = useQuery({
-    queryKey: ['latestProducts'],
+    queryKey: [QUERY_KEYS.PRODUCTS, sortBy.createdAt],
     queryFn: () =>
       productApi.getProducts({
         limit: 6,
-        sort_by: 'createdAt'
+        sort_by: sortBy.createdAt
       })
   })
   const { data: popularProductsData, isPending: isPendingPopularProductsData } = useQuery({
-    queryKey: ['popularProducts'],
+    queryKey: [QUERY_KEYS.PRODUCTS, sortBy.popular],
     queryFn: () =>
       productApi.getProducts({
         limit: 6,
-        sort_by: 'popular'
+        sort_by: sortBy.popular
       })
   })
 

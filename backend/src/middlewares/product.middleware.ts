@@ -155,6 +155,22 @@ const productMiddleware = {
               max: 5
             }
           }
+        },
+        attributes: {
+          optional: true,
+          isArray: {
+            errorMessage: PRODUCT_MESSAGES.ATTRIBUTES_MUST_BE_ARRAY
+          }
+        },
+        'attributes.*.key': {
+          trim: true,
+          notEmpty: true,
+          isString: true
+        },
+        'attributes.*.value': {
+          trim: true,
+          notEmpty: true,
+          isString: true
         }
       },
       ['body']
@@ -308,6 +324,22 @@ const productMiddleware = {
               max: 5
             }
           }
+        },
+        attributes: {
+          optional: true,
+          isArray: {
+            errorMessage: PRODUCT_MESSAGES.ATTRIBUTES_MUST_BE_ARRAY
+          }
+        },
+        'attributes.*.key': {
+          trim: true,
+          notEmpty: true,
+          isString: true
+        },
+        'attributes.*.value': {
+          trim: true,
+          notEmpty: true,
+          isString: true
         }
       },
       ['body']

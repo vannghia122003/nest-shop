@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 import productApi from '~/apis/product.api'
 import ConfirmModal from '~/components/ConfirmModal'
+import QUERY_KEYS from '~/constants/keys'
 import { customTheme } from '~/types/custom.type'
 import { Product } from '~/types/product.type'
 import { formatCurrency } from '~/utils/helpers'
@@ -43,7 +44,7 @@ function ProductTable({ productList, handleUpdateProduct }: Props) {
       onSuccess: () => {
         setOpenModalConfirm(false)
         setDeletingProductId('')
-        queryClient.refetchQueries({ queryKey: ['products'] })
+        queryClient.refetchQueries({ queryKey: [QUERY_KEYS.PRODUCTS] })
       }
     })
   }

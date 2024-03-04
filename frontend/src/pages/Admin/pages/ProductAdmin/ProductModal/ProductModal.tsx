@@ -18,6 +18,7 @@ import { ProductBody } from '~/types/product.type'
 import { ErrorResponse } from '~/types/response.type'
 import { isUnprocessableEntity } from '~/utils/errors'
 import InputFile from '../../../components/InputFile'
+import QUERY_KEYS from '~/constants/keys'
 
 interface Props {
   openModal: boolean
@@ -55,13 +56,13 @@ const ProductModal = forwardRef<{ reset: () => void }, Props>(function ProductMo
   })
   const formErrors = form.formState.errors
   const { data: categoriesData } = useQuery({
-    queryKey: ['categories'],
+    queryKey: [QUERY_KEYS.CATEGORIES],
     queryFn: () => categoryApi.getCategories(),
     staleTime: 5 * 60 * 1000,
     enabled: openModal
   })
   const { data: productData } = useQuery({
-    queryKey: ['product'],
+    queryKey: [QUERY_KEYS.PRODUCT_DETAIL],
     queryFn: () => productApi.getProductDetail(updatingProductId),
     enabled: Boolean(updatingProductId)
   })
@@ -123,7 +124,7 @@ const ProductModal = forwardRef<{ reset: () => void }, Props>(function ProductMo
       }
       form.reset()
       onCloseModal()
-      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] })
     } catch (error) {
       if (isUnprocessableEntity<ErrorResponse<FormDataError>>(error)) {
         const formError = error.response?.data.errors

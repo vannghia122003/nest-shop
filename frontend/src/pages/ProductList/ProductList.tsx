@@ -10,17 +10,18 @@ import { useProductListParams } from '~/hooks'
 import { ProductListQuery } from '~/types/product.type'
 import AsideFilter from './components/AsideFilter'
 import SortBar from './components/SortBar'
+import QUERY_KEYS from '~/constants/keys'
 
 function ProductList() {
   const productListParams = useProductListParams()
   const navigate = useNavigate()
   const categoriesQuery = useQuery({
-    queryKey: ['categories'],
+    queryKey: [QUERY_KEYS.CATEGORIES],
     queryFn: () => categoryApi.getCategories(),
     staleTime: 5 * 60 * 1000
   })
   const { data: productsData, isPending: isPendingProducts } = useQuery({
-    queryKey: ['products', productListParams],
+    queryKey: [QUERY_KEYS.PRODUCTS, productListParams],
     queryFn: () => productApi.getProducts(productListParams as ProductListQuery),
     placeholderData: keepPreviousData
   })

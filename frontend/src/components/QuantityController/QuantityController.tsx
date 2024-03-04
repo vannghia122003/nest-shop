@@ -59,6 +59,7 @@ function QuantityController(props: Props) {
       )}
     >
       <InputNumber
+        autoComplete="off"
         name="quantity"
         classNameInput="w-full text-center text-secondary outline-none border-none shadow-none"
         value={value || localValue}

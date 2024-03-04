@@ -12,6 +12,7 @@ import { order, sortBy } from '~/constants/product'
 import { ProductListQuery } from '~/types/product.type'
 import ProductModal from './ProductModal'
 import ProductTable from './ProductTable/ProductTable'
+import QUERY_KEYS from '~/constants/keys'
 
 const defaultState: ProductListQuery = {
   page: 1,
@@ -26,12 +27,12 @@ function ProductAdmin() {
   const [updatingProductId, setUpdatingProductId] = useState('')
   const [productListQuery, setProductListQuery] = useState<ProductListQuery>(defaultState)
   const { data: productData, refetch } = useQuery({
-    queryKey: ['products', productListQuery],
+    queryKey: [QUERY_KEYS.PRODUCTS, productListQuery],
     queryFn: () => productApi.getProducts(productListQuery),
     placeholderData: keepPreviousData
   })
   const { data: categoryListData } = useQuery({
-    queryKey: ['categories'],
+    queryKey: [QUERY_KEYS.CATEGORIES],
     queryFn: () => categoryApi.getCategories(),
     staleTime: 5 * 60 * 1000
   })

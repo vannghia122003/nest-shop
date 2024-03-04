@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { ReactNode, createContext, useState } from 'react'
+import QUERY_KEYS from '~/constants/keys'
 import { User } from '~/types/user.type'
 import { getAccessTokenFromLocalStorage, getProfileFromLocalStorage } from '~/utils/auth'
 
@@ -29,8 +30,8 @@ function AppProvider({ children }: { children: ReactNode }) {
   const reset = () => {
     setIsAuthenticated(false)
     setProfile(null)
-    queryClient.removeQueries({ queryKey: ['cart'] })
-    queryClient.removeQueries({ queryKey: ['notifications'] })
+    queryClient.removeQueries({ queryKey: [QUERY_KEYS.CART] })
+    queryClient.removeQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] })
   }
 
   return (

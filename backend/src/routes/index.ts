@@ -15,7 +15,6 @@ const routes = Router()
 
 routes.use(roleMiddleware.checkPermission)
 
-routes.get('/', (req, res) => res.json({ message: 'Server is running' }))
 routes.use('/auth', authRoute)
 routes.use('/users', userRoute)
 routes.use('/categories', categoryRoute)

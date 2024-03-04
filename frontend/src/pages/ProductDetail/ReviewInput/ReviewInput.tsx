@@ -17,6 +17,7 @@ import { FaGrin, FaStar } from 'react-icons/fa'
 import * as yup from 'yup'
 import productApi from '~/apis/product.api'
 import Button from '~/components/Button'
+import QUERY_KEYS from '~/constants/keys'
 import { AppContext } from '~/contexts/app.context'
 import { socket } from '~/utils/socket'
 
@@ -62,7 +63,7 @@ function ReviewInput({ product_id, editingReviewId, setEditingReviewId }: Props)
   const createReviewMutation = useMutation({ mutationFn: productApi.createReview })
   const updateReviewMutation = useMutation({ mutationFn: productApi.updateReview })
   const { data: reviewData } = useQuery({
-    queryKey: ['review', editingReviewId],
+    queryKey: [QUERY_KEYS.REVIEW_DETAIL, editingReviewId],
     queryFn: () =>
       productApi.getReviewDetai({
         product_id,
@@ -91,7 +92,7 @@ function ReviewInput({ product_id, editingReviewId, setEditingReviewId }: Props)
           onSuccess: () => {
             reset()
             setRating(0)
-            queryClient.invalidateQueries({ queryKey: ['reviews'] })
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
             socket.emit('add_review')
             socket.emit('review_empty')
           }
@@ -104,7 +105,7 @@ function ReviewInput({ product_id, editingReviewId, setEditingReviewId }: Props)
           onSuccess: () => {
             reset()
             setRating(0)
-            queryClient.invalidateQueries({ queryKey: ['reviews'] })
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
             setEditingReviewId(null)
             socket.emit('update_review')
           }

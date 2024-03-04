@@ -13,6 +13,7 @@ import DateSelect from '~/components/DateSelect'
 import Input from '~/components/Input'
 import InputFile from '~/components/InputFile/InputFile'
 import InputNumber from '~/components/InputNumber'
+import QUERY_KEYS from '~/constants/keys'
 import { AppContext } from '~/contexts/app.context'
 import { ErrorResponse } from '~/types/response.type'
 import { setProfileToLocalStorage } from '~/utils/auth'
@@ -44,7 +45,7 @@ function Profile() {
     reValidateMode: 'onBlur'
   })
   const { data: profileData, refetch } = useQuery({
-    queryKey: ['profile'],
+    queryKey: [QUERY_KEYS.PROFILE],
     queryFn: userApi.getMe
   })
   const updateProfileMutation = useMutation({ mutationFn: userApi.updateProfile })

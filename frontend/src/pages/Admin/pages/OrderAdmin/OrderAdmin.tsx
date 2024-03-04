@@ -22,6 +22,7 @@ import { customTheme } from '~/types/custom.type'
 import { OrderQuery, OrderStatus } from '~/types/order.type'
 import { convertISOString, formatCurrency } from '~/utils/helpers'
 import OrderModal from './OrderModal'
+import QUERY_KEYS from '~/constants/keys'
 
 const options = [
   { label: 'Chờ xác nhận', value: orderStatus.processing },
@@ -39,7 +40,7 @@ function OrderAdmin() {
     page: 1
   })
   const { data: ordersData, refetch } = useQuery({
-    queryKey: ['orders', orderListQuery],
+    queryKey: [QUERY_KEYS.ORDERS, orderListQuery],
     queryFn: () => orderApi.getOrders(orderListQuery),
     placeholderData: keepPreviousData
   })

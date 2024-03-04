@@ -17,6 +17,7 @@ import roleApi from '~/apis/role.api'
 import userApi from '~/apis/user.api'
 import ConfirmModal from '~/components/ConfirmModal'
 import Select from '~/components/Select'
+import QUERY_KEYS from '~/constants/keys'
 import { customTheme } from '~/types/custom.type'
 import { UserListQuery } from '~/types/user.type'
 
@@ -28,11 +29,11 @@ function UserAdmin() {
     page: 1
   })
   const { data: usersData, refetch } = useQuery({
-    queryKey: ['user', userListQuery],
+    queryKey: [QUERY_KEYS.USERS, userListQuery],
     queryFn: () => userApi.getUsers(userListQuery)
   })
   const { data: rolesData } = useQuery({
-    queryKey: ['roles'],
+    queryKey: [QUERY_KEYS.ROLES],
     queryFn: roleApi.getRoles
   })
   const updateUserMutation = useMutation({ mutationFn: userApi.updateUser })

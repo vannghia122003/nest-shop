@@ -19,6 +19,8 @@ const httpServer = createServer(app)
 // init folder uploads
 initFolder()
 
+app.get('/', (req, res) => res.json({ message: 'Server is running' }))
+
 app.use(helmet())
 app.use(cors(corsOptions))
 app.use(express.json())

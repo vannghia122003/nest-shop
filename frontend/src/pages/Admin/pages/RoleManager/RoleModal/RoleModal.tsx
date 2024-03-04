@@ -10,6 +10,7 @@ import * as yup from 'yup'
 import roleApi from '~/apis/role.api'
 import Button from '~/components/Button'
 import Input from '~/components/Input'
+import QUERY_KEYS from '~/constants/keys'
 import { Permission } from '~/types/role.type'
 
 interface Props {
@@ -33,12 +34,12 @@ function RoleModal({ openModal, onCloseModal, updatingRoleId }: Props) {
     defaultValues: { name: '', permissions: [] }
   })
   const { data: roleData } = useQuery({
-    queryKey: ['role'],
+    queryKey: [QUERY_KEYS.ROLE_DETAIL],
     queryFn: () => roleApi.getRole(updatingRoleId),
     enabled: Boolean(updatingRoleId)
   })
   const { data: permissionsData } = useQuery({
-    queryKey: ['permissions'],
+    queryKey: [QUERY_KEYS.PERMISSIONS],
     queryFn: () => roleApi.getPermissions(),
     enabled: Boolean(updatingRoleId)
   })
@@ -87,7 +88,7 @@ function RoleModal({ openModal, onCloseModal, updatingRoleId }: Props) {
         onSuccess: (data) => {
           toast.success(data.message)
           onCloseModal()
-          queryClient.invalidateQueries({ queryKey: ['roles'] })
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ROLES] })
         }
       }
     )

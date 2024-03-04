@@ -1,21 +1,22 @@
-import Button from '~/components/Button'
-import Input from '~/components/Input'
-import * as yup from 'yup'
-import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import roleApi from '~/apis/role.api'
-import { toast } from 'react-toastify'
-import { isUnprocessableEntity } from '~/utils/errors'
-import { ErrorResponse } from '~/types/response.type'
-import { customTheme } from '~/types/custom.type'
 import { Button as ButtonFlowBite, Flowbite, Table } from 'flowbite-react'
-import { FaEdit, FaTrashAlt } from 'react-icons/fa'
-import { convertISOString } from '~/utils/helpers'
-import ConfirmModal from '~/components/ConfirmModal'
 import { useState } from 'react'
-import RoleModal from './RoleModal'
+import { useForm } from 'react-hook-form'
+import { FaEdit, FaTrashAlt } from 'react-icons/fa'
+import { toast } from 'react-toastify'
+import * as yup from 'yup'
+import roleApi from '~/apis/role.api'
+import Button from '~/components/Button'
+import ConfirmModal from '~/components/ConfirmModal'
+import Input from '~/components/Input'
 import config from '~/constants/config'
+import QUERY_KEYS from '~/constants/keys'
+import { customTheme } from '~/types/custom.type'
+import { ErrorResponse } from '~/types/response.type'
+import { isUnprocessableEntity } from '~/utils/errors'
+import { convertISOString } from '~/utils/helpers'
+import RoleModal from './RoleModal'
 
 const roleSchema = yup.object({
   name: yup.string().required('Nhập tên role')
@@ -32,7 +33,10 @@ function RoleManager() {
     mode: 'onBlur',
     reValidateMode: 'onBlur'
   })
-  const { data: rolesData, refetch } = useQuery({ queryKey: ['roles'], queryFn: roleApi.getRoles })
+  const { data: rolesData, refetch } = useQuery({
+    queryKey: [QUERY_KEYS.ROLES],
+    queryFn: roleApi.getRoles
+  })
   const createRoleMutation = useMutation({ mutationFn: roleApi.createRole })
   const deleteRoleMutation = useMutation({ mutationFn: roleApi.deleteRole })
 

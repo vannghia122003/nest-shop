@@ -8,6 +8,7 @@ import Review from '~/models/Review'
 import { PaginationReqQuery } from '~/types/common'
 import { ProductDocument } from '~/types/document'
 import {
+  Attributes,
   CreateProductReqBody,
   CreateReviewReqBody,
   GetProductsReqQuery,
@@ -19,6 +20,7 @@ import { ApiError } from '~/utils/ApiError'
 
 const productService = {
   async createProduct(body: CreateProductReqBody) {
+    const attributes = body.attributes?.map((item) => pick(item, ['key', 'value']) as Attributes)
     const result = await db.products.insertOne(
       new Product({
         name: body.name,
@@ -28,6 +30,7 @@ const productService = {
         rating: body.rating,
         image: body.image,
         images: body.images,
+        attributes,
         category_id: body.category_id,
         sold: body.sold,
         view: body.view,
@@ -220,6 +223,8 @@ const productService = {
     return product[0]
   },
   async updateProductById(product_id: string, body: UpdateProductReqBody) {
+    const attributes =
+      body.attributes?.map((item) => pick(item, ['key', 'value']) as Attributes) || []
     const updateBody = pick(body, [
       'name',
       'description',
@@ -255,16 +260,10 @@ const productService = {
     const product = await db.products.findOneAndUpdate(
       { _id: new ObjectId(product_id) },
       {
-        $set: {
-          ...updateBody
-        },
-        $currentDate: {
-          updated_at: true
-        }
+        $set: { ...updateBody, attributes },
+        $currentDate: { updated_at: true }
       },
-      {
-        returnDocument: 'after'
-      }
+      { returnDocument: 'after' }
     )
     return product
   },

@@ -5,6 +5,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { FaSearch, FaTimes } from 'react-icons/fa'
 import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import productApi from '~/apis/product.api'
+import QUERY_KEYS from '~/constants/keys'
 import path from '~/constants/path'
 import { useDebounce } from '~/hooks'
 import { formatCurrency, generateNameId } from '~/utils/helpers'
@@ -25,7 +26,7 @@ function Search() {
   const debouncedSearchValue = useDebounce(searchValue, 700)
 
   const { data: searchResult, isFetching } = useQuery({
-    queryKey: ['products/search', debouncedSearchValue],
+    queryKey: [QUERY_KEYS.PRODUCTS, debouncedSearchValue],
     queryFn: () => productApi.getProducts({ name: debouncedSearchValue }),
     enabled: Boolean(debouncedSearchValue)
   })

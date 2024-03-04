@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import notificationApi from '~/apis/notification.api'
 import Popover from '~/components/Popover'
 import Images from '~/constants/images'
+import QUERY_KEYS from '~/constants/keys'
 import path from '~/constants/path'
 import { Notification } from '~/types/notification.type'
 
@@ -14,18 +15,30 @@ interface Props {
 
 function Notification({ notificationList }: Props) {
   const queryClient = useQueryClient()
-  const markAllReadMutation = useMutation({
-    mutationFn: notificationApi.markAllRead,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-    }
-  })
+  const maskAsReadMutation = useMutation({ mutationFn: notificationApi.markAsRead })
+  const markAllReadMutation = useMutation({ mutationFn: notificationApi.markAllRead })
   const unreadCount = notificationList.filter((notification) => !notification.read).length
   const isReadAll = notificationList.every((notification) => notification.read)
 
+  const handleMaskAsRead = (notificationId: string) => {
+    const isRead = notificationList.find((notification) => notification._id === notificationId)
+      ?.read
+    if (!isRead) {
+      maskAsReadMutation.mutate(notificationId, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] })
+        }
+      })
+    }
+  }
+
   const handleMarkAllRead = () => {
     if (!isReadAll) {
-      markAllReadMutation.mutate()
+      markAllReadMutation.mutate(undefined, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] })
+        }
+      })
     }
   }
 
@@ -45,6 +58,7 @@ function Notification({ notificationList }: Props) {
               <ul className="max-h-[50vh] overflow-y-auto">
                 {notificationList.map((notification) => (
                   <li
+                    onMouseEnter={() => handleMaskAsRead(notification._id)}
                     className={clsx(
                       'p-3 flex hover:bg-gray-100 gap-3 items-center border-t border-gray-200',
                       { 'bg-primary/20': !notification.read }
