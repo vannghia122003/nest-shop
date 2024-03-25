@@ -1,5 +1,10 @@
 import { SuccessResponse } from './response.type'
 
+export interface Attributes {
+  key: string
+  value: string
+}
+
 export interface ProductListQuery {
   page?: number | string
   limit?: number | string
@@ -31,6 +36,7 @@ export interface Product {
   }
   created_at: string
   updated_at: string
+  attributes: Attributes[]
 }
 
 export interface ProductBody {
@@ -43,6 +49,7 @@ export interface ProductBody {
   image: string
   images: string[]
   category_id: string
+  attributes: Attributes[]
 }
 
 export interface ProductListResponse extends SuccessResponse<Product[]> {

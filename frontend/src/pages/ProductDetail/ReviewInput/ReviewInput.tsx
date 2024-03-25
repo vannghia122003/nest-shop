@@ -92,7 +92,10 @@ function ReviewInput({ product_id, editingReviewId, setEditingReviewId }: Props)
           onSuccess: () => {
             reset()
             setRating(0)
-            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
+            Promise.all([
+              queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCT_DETAIL] }),
+              queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
+            ])
             socket.emit('add_review')
             socket.emit('review_empty')
           }
@@ -105,8 +108,11 @@ function ReviewInput({ product_id, editingReviewId, setEditingReviewId }: Props)
           onSuccess: () => {
             reset()
             setRating(0)
-            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
             setEditingReviewId(null)
+            Promise.all([
+              queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCT_DETAIL] }),
+              queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REVIEWS] })
+            ])
             socket.emit('update_review')
           }
         }
@@ -220,13 +226,15 @@ function ReviewInput({ product_id, editingReviewId, setEditingReviewId }: Props)
         </div>
         <div className="flex justify-end gap-2">
           <>
-            <button
-              className="rounded-lg bg-white py-3 text-center font-bold text-secondary border border-gray-300 duration-300 px-4 hover:bg-gray-200"
-              type="button"
-              onClick={handleCancelEdit}
-            >
-              Huỷ
-            </button>
+            {editingReviewId && (
+              <button
+                className="rounded-lg bg-white py-3 text-center font-bold text-secondary border border-gray-300 duration-300 px-4 hover:bg-gray-200"
+                type="button"
+                onClick={handleCancelEdit}
+              >
+                Huỷ
+              </button>
+            )}
             <Button
               type="submit"
               className="rounded-lg bg-secondary py-3 text-center font-bold text-white duration-300 hover:bg-[#29A56C] px-4"

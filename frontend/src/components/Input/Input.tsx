@@ -9,6 +9,7 @@ interface Props<TFieldValues extends FieldValues> extends InputHTMLAttributes<HT
   classNameInput?: string
   classNameError?: string
   classNameEye?: string
+  errorMessageField?: string
 }
 
 function Input<TFieldValues extends FieldValues = FieldValues>({
@@ -19,13 +20,16 @@ function Input<TFieldValues extends FieldValues = FieldValues>({
   classNameInput,
   disabled,
   onChange,
+  errorMessageField,
   classNameError = 'mt-1 text-red-600 text-sm min-h-[1.25rem]',
   classNameEye = 'absolute right-3 top-1/2 -translate-y-1/2 text-lg cursor-pointer',
   ...rest
 }: Props<TFieldValues>) {
   const [openEye, setOpenEye] = useState(false)
   const registerResult = formObj ? formObj.register(name) : null
-  const errorMessage = formObj?.formState.errors[name]?.message as string | undefined
+  const errorMessage = (errorMessageField ??
+    formObj?.formState.errors[name]?.message ??
+    '') as string
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     formObj?.clearErrors(name)
@@ -75,6 +79,7 @@ function Input<TFieldValues extends FieldValues = FieldValues>({
           </span>
         )}
       </div>
+
       {formObj && <p className={classNameError}>{errorMessage}</p>}
     </div>
   )

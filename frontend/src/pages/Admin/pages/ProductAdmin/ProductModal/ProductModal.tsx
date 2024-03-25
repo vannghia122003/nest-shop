@@ -4,7 +4,8 @@ import { Editor } from '@tinymce/tinymce-react'
 import clsx from 'clsx'
 import { Modal } from 'flowbite-react'
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { AiOutlineCloseCircle, AiOutlinePlusCircle } from 'react-icons/ai'
 import { toast } from 'react-toastify'
 import * as yup from 'yup'
 import categoryApi from '~/apis/category.api'
@@ -14,11 +15,11 @@ import Button from '~/components/Button'
 import Input from '~/components/Input'
 import InputNumber from '~/components/InputNumber'
 import Select from '~/components/Select'
+import QUERY_KEYS from '~/constants/keys'
 import { ProductBody } from '~/types/product.type'
 import { ErrorResponse } from '~/types/response.type'
 import { isUnprocessableEntity } from '~/utils/errors'
 import InputFile from '../../../components/InputFile'
-import QUERY_KEYS from '~/constants/keys'
 
 interface Props {
   openModal: boolean
@@ -37,7 +38,16 @@ const productSchema = yup.object({
   view: yup.number().required('Nhập số lượt xem'),
   image: yup.string().required('Chọn ảnh của sản phẩm'),
   images: yup.array().of(yup.string().defined()).required('Chọn ảnh chi tiết của sản phẩm'),
-  description: yup.string().required('Nhập mô tả sản phẩm')
+  description: yup.string().required('Nhập mô tả sản phẩm'),
+  attributes: yup
+    .array()
+    .of(
+      yup.object().shape({
+        key: yup.string().required('Trường này là bắt buộc'),
+        value: yup.string().required('Trường này là bắt buộc')
+      })
+    )
+    .required()
 })
 type FormData = yup.InferType<typeof productSchema>
 type FormDataError = {
@@ -52,9 +62,17 @@ const ProductModal = forwardRef<{ reset: () => void }, Props>(function ProductMo
   const form = useForm<FormData>({
     resolver: yupResolver(productSchema),
     mode: 'onBlur',
-    reValidateMode: 'onBlur'
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      attributes: []
+    }
   })
   const formErrors = form.formState.errors
+  const { fields, append, remove } = useFieldArray({
+    name: 'attributes',
+    control: form.control
+  })
+
   const { data: categoriesData } = useQuery({
     queryKey: [QUERY_KEYS.CATEGORIES],
     queryFn: () => categoryApi.getCategories(),
@@ -79,8 +97,18 @@ const ProductModal = forwardRef<{ reset: () => void }, Props>(function ProductMo
   useEffect(() => {
     if (updatingProductId) {
       if (productData) {
-        const { name, category, price, quantity, sold, view, image, images, description } =
-          productData.result
+        const {
+          name,
+          category,
+          price,
+          quantity,
+          sold,
+          view,
+          image,
+          images,
+          description,
+          attributes
+        } = productData.result
         form.setValue('name', name)
         form.setValue('category', { value: category?._id as string, label: category?.name })
         form.setValue('price', price)
@@ -90,12 +118,14 @@ const ProductModal = forwardRef<{ reset: () => void }, Props>(function ProductMo
         form.setValue('image', image)
         form.setValue('images', images)
         form.setValue('description', description)
+        form.setValue('attributes', attributes)
       }
     }
   }, [form, productData, updatingProductId])
 
   const handleSubmit = form.handleSubmit(async (data: FormData) => {
     const dataUpdate: ProductBody = { ...data, category_id: data.category.value }
+    console.log('🚀 ~ handleSubmit ~ dataUpdate:', dataUpdate)
     try {
       if (image) {
         const formData = new FormData()
@@ -334,6 +364,49 @@ const ProductModal = forwardRef<{ reset: () => void }, Props>(function ProductMo
             <p className="mt-1 text-red-600 text-sm min-h-[1.25rem]">
               {formErrors.description?.message}
             </p>
+          </div>
+          <div>
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <span>Chi tiết sản phẩm</span>
+                <button
+                  type="button"
+                  className="text-xl"
+                  title="Thêm thông tin chi tiết sản phẩm"
+                  onClick={() => append({ key: '', value: '' })}
+                >
+                  <AiOutlinePlusCircle />
+                </button>
+              </div>
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mb-2 flex-grow">
+                    <Input
+                      name={`attributes.${index}.key`}
+                      placeholder="Tên"
+                      formObj={form}
+                      errorMessageField={formErrors?.attributes?.[0]?.key?.message}
+                    />
+                    <Input
+                      name={`attributes.${index}.value`}
+                      placeholder="Giá trị"
+                      formObj={form}
+                      errorMessageField={formErrors?.attributes?.[0]?.value?.message}
+                    />
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => remove(index)}
+                      className="text-xl"
+                      title="Xoá trường này"
+                    >
+                      <AiOutlineCloseCircle />
+                    </button>
+                    <div className="mt-1 min-h-[1.25rem]"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </form>
       </Modal.Body>

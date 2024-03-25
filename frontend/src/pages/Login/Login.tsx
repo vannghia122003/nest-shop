@@ -34,19 +34,24 @@ function Login() {
     reValidateMode: 'onBlur'
   })
 
-  const loginMutation = useMutation({ mutationFn: authApi.login })
+  const loginMutation = useMutation({
+    mutationFn: async (dataLogin: FormData) => {
+      const data = await authApi.login(dataLogin)
+      const { access_token, refresh_token } = data.result
+      setIsAuthenticated(true)
+      setAccessTokenToLocalStorage(access_token)
+      setRefreshTokenToLocalStorage(refresh_token)
+
+      const user = await userApi.getMe()
+      setProfile(user.result)
+      setProfileToLocalStorage(user.result)
+      return data
+    }
+  })
 
   const onSubmit = (data: FormData) => {
     loginMutation.mutate(data, {
       onSuccess: async (data) => {
-        const { access_token, refresh_token } = data.result
-        setIsAuthenticated(true)
-        setAccessTokenToLocalStorage(access_token)
-        setRefreshTokenToLocalStorage(refresh_token)
-
-        const user = await userApi.getMe()
-        setProfile(user.result)
-        setProfileToLocalStorage(user.result)
         toast.success(data.message)
       },
       onError: (error) => {

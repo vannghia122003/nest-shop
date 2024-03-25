@@ -1,11 +1,12 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Dispatch, useCallback, useEffect, useState } from 'react'
+import { Dispatch, useCallback, useContext, useEffect, useState } from 'react'
 import { FaEllipsisV, FaRegClock } from 'react-icons/fa'
 import productApi from '~/apis/product.api'
 import ConfirmModal from '~/components/ConfirmModal'
 import Pagination from '~/components/Pagination'
 import ProductRating from '~/components/ProductRating'
 import QUERY_KEYS from '~/constants/keys'
+import { AppContext } from '~/contexts/app.context'
 import { ReviewListQuery } from '~/types/review.type'
 import { convertISOString } from '~/utils/helpers'
 import { socket } from '~/utils/socket'
@@ -21,6 +22,7 @@ interface PopoverStates {
 
 function ReviewList({ product_id, setEditingReviewId, isTypingReview }: Props) {
   const queryClient = useQueryClient()
+  const { isAuthenticated } = useContext(AppContext)
   const [pagination, setPagination] = useState<ReviewListQuery>({ limit: 5, page: 1 })
   const { data: reviewsData } = useQuery({
     queryKey: [QUERY_KEYS.REVIEWS, pagination],
@@ -143,32 +145,34 @@ function ReviewList({ product_id, setEditingReviewId, isTypingReview }: Props) {
                 </div>
                 <p className="mt-2 text-secondary">{review.comment}</p>
               </div>
-              <div className="absolute top-0 right-0">
-                <button
-                  className="text-secondary p-2 hover:bg-gray-100 rounded-full"
-                  onClick={() => handleShowPopover(review._id)}
-                >
-                  <FaEllipsisV />
-                </button>
-                {popoverStates[review._id] && (
-                  <div className="absolute top-[calc(100%+5px)] right-0 z-10">
-                    <div className="min-w-[120px] rounded-md border border-gray-200 bg-white shadow-md">
-                      <button
-                        className="hover:bg-gray-100 hover:text-primary px-4 py-3 w-full text-left"
-                        onClick={() => handleEditReview(review._id)}
-                      >
-                        Chỉnh sửa
-                      </button>
-                      <button
-                        className="hover:bg-gray-100 hover:text-primary px-4 py-3 w-full text-left"
-                        onClick={() => handleDeleteReview(review._id)}
-                      >
-                        Xoá
-                      </button>
+              {isAuthenticated && (
+                <div className="absolute top-0 right-0">
+                  <button
+                    className="text-secondary p-2 hover:bg-gray-100 rounded-full"
+                    onClick={() => handleShowPopover(review._id)}
+                  >
+                    <FaEllipsisV />
+                  </button>
+                  {popoverStates[review._id] && (
+                    <div className="absolute top-[calc(100%+5px)] right-0 z-10">
+                      <div className="min-w-[120px] rounded-md border border-gray-200 bg-white shadow-md">
+                        <button
+                          className="hover:bg-gray-100 hover:text-primary px-4 py-3 w-full text-left"
+                          onClick={() => handleEditReview(review._id)}
+                        >
+                          Chỉnh sửa
+                        </button>
+                        <button
+                          className="hover:bg-gray-100 hover:text-primary px-4 py-3 w-full text-left"
+                          onClick={() => handleDeleteReview(review._id)}
+                        >
+                          Xoá
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         ))}

@@ -39,23 +39,25 @@ function ProductDetail() {
     ])
   }, [queryClient])
 
+  const handleTypingReview = () => setIsTypingReview(true)
+
+  const handleTypingReviewFinish = () => setIsTypingReview(false)
+
   /* handle socket */
   useEffect(() => {
     socket.emit('join_product_room', product_id)
     socket.on('add_review', handleInvalidateQueries)
     socket.on('update_review', handleInvalidateQueries)
     socket.on('delete_review', handleInvalidateQueries)
-    socket.on('typing_review', () => {
-      setIsTypingReview(true)
-    })
-    socket.on('review_empty', () => setIsTypingReview(false))
+    socket.on('typing_review', handleTypingReview)
+    socket.on('review_empty', handleTypingReviewFinish)
 
     return () => {
-      socket.off('add_review')
+      socket.off('add_review', handleInvalidateQueries)
       socket.off('update_review', handleInvalidateQueries)
       socket.off('delete_review', handleInvalidateQueries)
-      socket.off('typing_review', handleInvalidateQueries)
-      socket.off('review_empty', handleInvalidateQueries)
+      socket.off('typing_review', handleTypingReview)
+      socket.off('review_empty', handleTypingReviewFinish)
     }
   }, [handleInvalidateQueries, product_id])
   /* end handle socket  */
@@ -169,13 +171,26 @@ function ProductDetail() {
           </div>
         </div>
         <div className="mt-4 rounded-md border border-[#ececec] bg-white p-4 shadow lg:p-5">
-          <h2 className="text-2xl font-bold text-secondary">Mô tả sản phẩm</h2>
-          <div className="mt-2 text-sm leading-loose">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(product.description)
-              }}
-            />
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-secondary">Chi tiết sản phẩm</h2>
+            <div className="mt-2 md:pl-6">
+              {product.attributes.map((attribute) => (
+                <div key={attribute.key} className="flex gap-3 text-sm mb-2">
+                  <div className="w-[130px] truncate text-[#0006]">{attribute.key}</div>
+                  <div className="text-secondary">{attribute.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-secondary">Mô tả sản phẩm</h2>
+            <div className="mt-2 text-sm leading-loose md:pl-6">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(product.description)
+                }}
+              />
+            </div>
           </div>
         </div>
         <div className="mt-4 rounded-md border border-[#ececec] bg-white p-4 shadow lg:p-5">
