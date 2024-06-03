@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { DEFAULT_IMAGE } from '~/constants/common'
 
 interface Type {
   _id?: ObjectId
@@ -9,12 +10,12 @@ interface Type {
   password: string
   created_at?: Date
   updated_at?: Date
-  email_verify_token?: string // jwt hoặc '' nếu đã xác thực email
-  reset_password_token?: string // jwt hoặc '' nếu đã xác thực email
+  email_verify_token?: string 
+  reset_password_token?: string 
   is_email_verified?: boolean
   role_id: ObjectId
-  phone?: string // optional
-  avatar?: string // optional
+  phone?: string
+  avatar?: string
 }
 
 export default class User {
@@ -47,9 +48,7 @@ export default class User {
     this.reset_password_token = user.reset_password_token || ''
     this.is_email_verified = user.is_email_verified || false
     this.role_id = user.role_id
-    this.avatar =
-      user.avatar ||
-      'https://ecommerce-vannghia.s3.ap-southeast-1.amazonaws.com/210ae8457c0ee919bc4950f00.jpg'
+    this.avatar = user.avatar || DEFAULT_IMAGE
     this.phone = user.phone || ''
   }
 }
