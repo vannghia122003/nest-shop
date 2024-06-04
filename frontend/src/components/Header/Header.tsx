@@ -18,8 +18,8 @@ import Search from './Search'
 import Notification from './Notification'
 import notificationApi from '~/apis/notification.api'
 import { socket } from '~/utils/socket'
-import config from '~/constants/config'
 import QUERY_KEYS from '~/constants/keys'
+import { Roles } from '~/types/role.type'
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
@@ -91,7 +91,7 @@ function Header() {
                   renderPopover={
                     <div className="min-w-[150px] rounded-md border border-gray-200 bg-white shadow-md">
                       <ul>
-                        {profile?.role._id !== config.user_role_id && (
+                        {profile?.role.name !== Roles.Customer && (
                           <li className="cursor-pointer hover:bg-gray-100 hover:text-primary">
                             <Link to={path.admin} className="flex items-end gap-1 px-4 py-3">
                               <span className="text-2xl">

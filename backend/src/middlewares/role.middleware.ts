@@ -56,8 +56,8 @@ const roleMiddleware = {
             errorMessage: ROLE_MESSAGE.ROLE_NAME_IS_REQUIRED
           },
           custom: {
-            options: async (value) => {
-              const role = await db.roles.findOne({ name: value })
+            options: async (value: string) => {
+              const role = await db.roles.findOne({ name: value.toLowerCase() })
               if (role) {
                 throw new Error(ROLE_MESSAGE.ROLE_ALREADY_EXISTS)
               }

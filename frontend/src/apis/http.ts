@@ -17,7 +17,7 @@ let refreshTokenRequest: Promise<{
 }> | null = null
 
 const http = axios.create({
-  baseURL: `${config.api_url}/api`,
+  baseURL: config.api_url,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 })
