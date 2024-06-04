@@ -7,3 +7,4 @@ dist/
 .env.example
 .editorconfig
 .dockerignore
+.gitignore

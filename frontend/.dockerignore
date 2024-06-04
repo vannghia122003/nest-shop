@@ -7,3 +7,4 @@ dist/
 .editorconfig
 README.md
 .dockerignore
+.gitignore
