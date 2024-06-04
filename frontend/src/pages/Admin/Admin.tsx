@@ -1,16 +1,16 @@
 import { useContext, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, Outlet } from 'react-router-dom'
 import { AppContext } from '~/contexts/app.context'
-import Sidebar from './components/Sidebar'
+import { Roles } from '~/types/role.type'
 import Header from './components/Header'
-import { Helmet } from 'react-helmet-async'
-import config from '~/constants/config'
+import Sidebar from './components/Sidebar'
 
 function Admin() {
   const { profile } = useContext(AppContext)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  if (profile?.role._id === config.user_role_id) return <Navigate to="/" />
+  if (profile?.role.name === Roles.Customer) return <Navigate to="/" />
 
   return (
     <div className="flex h-screen overflow-hidden">

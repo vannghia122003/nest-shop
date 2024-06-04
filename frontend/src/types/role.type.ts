@@ -22,3 +22,9 @@ export interface Permission {
   description: string
   created_at: string
 }
+
+export enum Roles {
+  SuperAdmin = 'super admin',
+  Staff = 'staff',
+  Customer = 'customer'
+}

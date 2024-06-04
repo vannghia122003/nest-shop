@@ -10,10 +10,10 @@ import roleApi from '~/apis/role.api'
 import Button from '~/components/Button'
 import ConfirmModal from '~/components/ConfirmModal'
 import Input from '~/components/Input'
-import config from '~/constants/config'
 import QUERY_KEYS from '~/constants/keys'
 import { customTheme } from '~/types/custom.type'
 import { ErrorResponse } from '~/types/response.type'
+import { Roles } from '~/types/role.type'
 import { isUnprocessableEntity } from '~/utils/errors'
 import { convertISOString } from '~/utils/helpers'
 import RoleModal from './RoleModal'
@@ -128,7 +128,7 @@ function RoleManager() {
                       <Table.Cell>{convertISOString(role.created_at)}</Table.Cell>
 
                       <Table.Cell>
-                        {role._id !== config.super_admin_role_id && (
+                        {role.name !== Roles.SuperAdmin && (
                           <div className="flex gap-2">
                             <ButtonFlowBite
                               color="cyan"
