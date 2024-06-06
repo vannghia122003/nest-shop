@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: 'nest-shop-api',
-      script: 'node dist/server.js',
+      script: 'dist/server.js',
       watch: true,
       env: {
         PORT: 4000,
@@ -16,3 +16,4 @@ module.exports = {
     }
   ]
 }
+// pm2 start ecosystem.config.js --env production
