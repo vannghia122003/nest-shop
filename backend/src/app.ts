@@ -26,7 +26,7 @@ app.use(cors(corsOptions))
 app.use(express.json())
 
 // init routes
-app.use('/api', routes)
+app.use(routes)
 
 // send 404 error for any unknown api request
 app.use((req, res, next) => {

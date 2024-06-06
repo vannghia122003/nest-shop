@@ -53,6 +53,7 @@ function ProductDetail() {
     socket.on('review_empty', handleTypingReviewFinish)
 
     return () => {
+      socket.emit('review_empty')
       socket.off('add_review', handleInvalidateQueries)
       socket.off('update_review', handleInvalidateQueries)
       socket.off('delete_review', handleInvalidateQueries)
