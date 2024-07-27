@@ -14,6 +14,8 @@ class CorsError extends Error {
 
 const corsOptions: CorsOptions = {
   origin: function (origin, callback) {
+    console.log(origin)
+
     if (env.BUILD_MODE === 'dev') return callback(null, true)
 
     if (origin === env.CLIENT_URL) return callback(null, true)
