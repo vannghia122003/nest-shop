@@ -7,7 +7,7 @@ const port = env.PORT || 4000
 db.connect()
   .then(() => {
     db.initIndex()
-    app.listen(port, () => console.log(`App listening on port ${port}`))
+    app.listen(port, () => console.log(`App listening on port ${port} - ${env.BUILD_MODE}`))
   })
   .catch((error) => {
     console.error(error)
