@@ -32,7 +32,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const method = request.method
     const path = request.route.path as string
     const { role, permissions } = jwtDecoded
-    const nonSecurePaths = ['/auth', '/account', '/dashboard']
+    const nonSecurePaths = ['/auth', '/account', '/file', '/dashboard']
 
     if (role.name === DefaultRole.ADMIN) return jwtDecoded
     if (nonSecurePaths.some((item) => path.startsWith(item))) return jwtDecoded
