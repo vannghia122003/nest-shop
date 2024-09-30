@@ -41,7 +41,8 @@ function Cart() {
   const createOrderMutation = useMutation({ mutationFn: orderApi.createOrder })
   const { data: cartData, refetch } = useQuery({
     queryKey: [QUERY_KEY.CART],
-    queryFn: cartApi.getCart
+    queryFn: cartApi.getCart,
+    staleTime: 5 * 60 * 1000
   })
   const productsInCart = cartData?.data
   const totalPrice = useMemo(

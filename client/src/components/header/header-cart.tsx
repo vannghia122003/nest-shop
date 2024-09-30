@@ -16,7 +16,8 @@ function HeaderCart() {
   const { data } = useQuery({
     queryKey: [QUERY_KEY.CART],
     queryFn: cartApi.getCart,
-    enabled: isAuthenticated
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000
   })
   const cart = data?.data ?? []
 

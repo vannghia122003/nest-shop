@@ -32,7 +32,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false)
     setProfile(null)
     queryClient.removeQueries({ queryKey: [QUERY_KEY.CART] })
-    // queryClient.removeQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] })
   }
   return (
     <AppProviderContext.Provider
