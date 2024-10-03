@@ -39,7 +39,7 @@ interface IProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onDeleteRow?: () => void
-  searchColumn: keyof TData
+  searchColumn: string
 }
 
 function DataTable<TData, TValue>(props: IProps<TData, TValue>) {

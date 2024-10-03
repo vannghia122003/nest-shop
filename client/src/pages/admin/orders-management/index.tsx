@@ -172,7 +172,7 @@ function OrdersManagement() {
           columns={orderColumns}
           data={ordersQuery?.data?.data.data || []}
           onDeleteRow={handleDeleteRow}
-          searchColumn="status"
+          searchColumn="customer"
         />
       </Card>
     </>

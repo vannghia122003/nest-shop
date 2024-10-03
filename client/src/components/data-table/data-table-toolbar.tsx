@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 
 interface IProps<TData> {
   table: Table<TData>
-  searchColumn: keyof TData
+  searchColumn: string
 }
 
 function DataTableToolbar<TData>({ table, searchColumn }: IProps<TData>) {
@@ -22,11 +22,11 @@ function DataTableToolbar<TData>({ table, searchColumn }: IProps<TData>) {
     <div className="flex items-center justify-between">
       <div className="space-x-2">
         <Input
-          placeholder="Search..."
+          placeholder={`Search ${searchColumn}...`}
           className="h-8 w-[350px] pr-6 lg:w-[450px]"
-          value={(table.getColumn(String(searchColumn))?.getFilterValue() as string) ?? ''}
+          value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn(String(searchColumn))?.setFilterValue(event.target.value)
+            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
           }
         />
       </div>

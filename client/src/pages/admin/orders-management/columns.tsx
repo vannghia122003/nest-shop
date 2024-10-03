@@ -61,7 +61,11 @@ const orderColumns: ColumnDef<IOrder>[] = [
         </div>
       </div>
     ),
-    enableSorting: false
+    enableSorting: false,
+    filterFn: (rows, _, filterValue) => {
+      if (!filterValue) return true
+      return rows.original.user.name.toLowerCase().includes(String(filterValue).toLowerCase())
+    }
   },
   {
     id: 'Date',
