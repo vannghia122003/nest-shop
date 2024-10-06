@@ -43,7 +43,6 @@ function Profile() {
   const { data, refetch } = useQuery({
     queryKey: [QUERY_KEY.PROFILE],
     queryFn: accountApi.getMe,
-    staleTime: 5 * 60 * 1000
   })
   const profile = data?.data
   const form = useForm<FormData>({

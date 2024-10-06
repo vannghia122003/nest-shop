@@ -9,6 +9,7 @@ import QUERY_KEY from '@/utils/query-key'
 
 function App() {
   const { isAuthenticated, setProfile, logout } = useAppContext()
+  
   useQuery({
     queryKey: [QUERY_KEY.PROFILE],
     queryFn: async () => {
@@ -17,7 +18,6 @@ function App() {
       setItemLocalStorage('profile', JSON.stringify(res.data))
       return res
     },
-    staleTime: 5 * 60 * 1000,
     enabled: isAuthenticated
   })
 
