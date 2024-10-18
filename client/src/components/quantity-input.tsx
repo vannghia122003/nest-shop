@@ -17,14 +17,17 @@ function QuantityInput(props: Props) {
   const [localValue, setLocalValue] = useState<number>(Number(value) || 0)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    let valueInput = Number(event.target.value)
+    const value = event.target.value
+    let valueInput = Number(value)
     if (max && valueInput > max) {
       valueInput = max
     } else if (valueInput < 1) {
       valueInput = 1
     }
-    onType && onType(valueInput)
-    setLocalValue(valueInput)
+    if (/^\d+$/.test(value) || value === '') {
+      onType && onType(valueInput)
+      setLocalValue(valueInput)
+    }
   }
 
   const handleIncrease = () => {
